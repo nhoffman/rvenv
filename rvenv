@@ -84,8 +84,9 @@ main <- function(arguments){
       stop('no packages specified or all specified packages already installed')
     }
 
-    if(args$bioc){
-      ## not implemented yet - see https://www.bioconductor.org/packages/release/bioc/html/BiocInstaller.html
+    ## not implemented yet - see https://www.bioconductor.org/packages/release/bioc/html/BiocInstaller.html
+    if(FALSE){
+    ## if(args$bioc){
       suppressPackageStartupMessages(library(BiocInstaller, quietly=TRUE))
       biocLite(to_install, lib.loc=lib, suppressUpdates=TRUE)
     }else{
