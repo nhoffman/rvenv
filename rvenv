@@ -50,8 +50,8 @@ main <- function(arguments){
   parser$add_argument('-r', '--requirements', help='a file listing packages')
   parser$add_argument('--rm', help='remove listed packages',
                       action='store_true', default=FALSE)
-  parser$add_argument('--bioc', help='packages are in Bioconductor',
-                      action='store_true', default=FALSE)
+  ## parser$add_argument('--bioc', help='packages are in Bioconductor',
+  ##                     action='store_true', default=FALSE)
   parser$add_argument('--update', help='update existing packages',
                       action='store_true', default=FALSE)
   parser$add_argument('--list', help='list packages installed locally',
@@ -84,6 +84,7 @@ main <- function(arguments){
     }
 
     if(args$bioc){
+      ## not implemented yet - see https://www.bioconductor.org/packages/release/bioc/html/BiocInstaller.html
       suppressPackageStartupMessages(library(BiocInstaller, quietly=TRUE))
       biocLite(to_install, lib.loc=lib, suppressUpdates=TRUE)
     }else{
