@@ -39,11 +39,21 @@ usage
 
 ::
 
-  usage: ./rvenv [-h] [-r REQUIREMENTS] [--rm] [--bioc] [--update] [--list]
+  usage: ./rvenv [-h] [-r REQUIREMENTS] [--rm] [--update] [--list]
 		 [--repos REPOS]
 		 [packages [packages ...]]
 
   Install R packages to a python virtualenv
+
+  Place this file in $VIRTUAL_ENV/bin and include the following in other R
+  scripts to add "$VIRTUAL_ENV/lib/R.%v-library" to the library search
+  path:
+
+    #!/usr/bin/env Rscript
+    if(Sys.getenv("VIRTUAL_ENV") == ""){stop("An active virtualenv is required")}
+    source(file.path(Sys.getenv("VIRTUAL_ENV"), "bin", "rvenv"))
+
+  Also see https://github.com/nhoffman/rvenv
 
   positional arguments:
     packages              one or more package names
@@ -53,8 +63,6 @@ usage
     -r REQUIREMENTS, --requirements REQUIREMENTS
 			  a file listing packages
     --rm                  remove listed packages
-    --bioc                packages are in Bioconductor
     --update              update existing packages
     --list                list packages installed locally
     --repos REPOS         value for "install.packages(repos)" [http://cran.fhcrc.org/]
-
