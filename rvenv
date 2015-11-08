@@ -1,5 +1,18 @@
 #!/usr/bin/env Rscript
 
+description <- 'Install R packages to a python virtualenv
+
+Place this file in $VIRTUAL_ENV/bin and include the following in other R
+scripts to add "$VIRTUAL_ENV/lib/R.%v-library" to the library search
+path:
+
+  #!/usr/bin/env Rscript
+  source(file.path(Sys.getenv("VIRTUAL_ENV"), "bin", "rvenv"))
+
+Also see https://github.com/nhoffman/rvenv
+
+'
+
 default_repos <- "http://cran.fhcrc.org/"
 
 is_main <- function(){
@@ -24,14 +37,15 @@ main <- function(arguments){
   lib <- renv()
   installed <- installed.packages(lib.loc=lib)[,'Package']
   if(!'argparse' %in% installed){
-    install.packages('argparse', lib=lib,
-                     repos=default_repos, dependencies=TRUE, clean=TRUE)
+    install.packages(
+        'argparse', lib=lib, repos=default_repos, dependencies=TRUE, clean=TRUE)
   }
 
   suppressPackageStartupMessages(library(argparse, quietly=TRUE))
 
-  parser <- ArgumentParser(description='Install R packages to a python virtualenv',
-                           formatter_class='argparse.RawTextHelpFormatter')
+  parser <- ArgumentParser(
+      description=gsub('\n', '\\\\n', description),
+      formatter_class='argparse.RawTextHelpFormatter')
   parser$add_argument('packages', help='one or more package names', nargs='*')
   parser$add_argument('-r', '--requirements', help='a file listing packages')
   parser$add_argument('--rm', help='remove listed packages',

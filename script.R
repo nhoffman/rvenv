@@ -5,8 +5,7 @@ suppressPackageStartupMessages(library(argparse, quietly=TRUE))
 
 main <- function(arguments){
 
-  parser <- ArgumentParser(description='An example script',
-                           formatter_class='argparse.RawTextHelpFormatter')
+  parser <- ArgumentParser(description='An example script')
   parser$add_argument('--foo', help='An argument')
 
   args <- parser$parse_args(arguments)
