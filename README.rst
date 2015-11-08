@@ -19,7 +19,7 @@ Assumes an active virtualenv::
 
   virtualenv r-env
   source r-env/bin/activate
-  curl https:// > $VIRTUAL_ENV/bin/rvenv && chmod +x $VIRTUAL_ENV/bin/rvenv
+  curl https://raw.githubusercontent.com/nhoffman/rvenv/master/rvenv > $VIRTUAL_ENV/bin/rvenv && chmod +x $VIRTUAL_ENV/bin/rvenv
 
 Execute from the command line to install packages to
 ``$VIRTUAL_ENV/lib/R.%v-library``.
@@ -32,4 +32,28 @@ packages::
 
 Loading ``rvenv`` as above prepends ``$VIRTUAL_ENV/lib/R.%v-library``
 to the library search path.
+
+usage
+=====
+
+::
+
+  usage: ./rvenv [-h] [-r REQUIREMENTS] [--rm] [--bioc] [--update] [--list]
+		 [--repos REPOS]
+		 [packages [packages ...]]
+
+  Install R packages to a python virtualenv
+
+  positional arguments:
+    packages              one or more package names
+
+  optional arguments:
+    -h, --help            show this help message and exit
+    -r REQUIREMENTS, --requirements REQUIREMENTS
+			  a file listing packages
+    --rm                  remove listed packages
+    --bioc                packages are in Bioconductor
+    --update              update existing packages
+    --list                list packages installed locally
+    --repos REPOS         value for "install.packages(repos)" [http://cran.fhcrc.org/]
 
