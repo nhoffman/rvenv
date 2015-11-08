@@ -31,7 +31,7 @@ packages::
   source(file.path(Sys.getenv('VIRTUAL_ENV'), 'bin', 'rvenv'))
 
 Loading ``rvenv`` as above prepends ``$VIRTUAL_ENV/lib/R.%v-library``
-to the library search path.
+to the library search path. See example script ``script.R``
 
 usage
 =====
