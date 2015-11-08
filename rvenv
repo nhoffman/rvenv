@@ -1,0 +1,87 @@
+#!/usr/bin/env Rscript
+
+default_repos <- "http://cran.fhcrc.org/"
+
+is_main <- function(){
+  ## Returns TRUE when this file is executed from the shell as a
+  ## script, FALSE when sourced.
+  is.null(unlist(lapply(sys.frames(), function(x) x$ofile)))
+}
+
+renv <- function(venv=Sys.getenv('VIRTUAL_ENV')){
+
+  if(nchar(venv) > 0){
+    lib <- .expand_R_libs_env_var(file.path(venv, 'lib', 'R.%v-library'))
+    dir.create(lib, showWarnings=FALSE, recursive=TRUE)
+  }else{
+    stop('An active virtualenv is required')
+  }
+
+  return(lib)
+}
+
+main <- function(arguments){
+  lib <- renv()
+  installed <- installed.packages(lib.loc=lib)[,'Package']
+  if(!'argparse' %in% installed){
+    install.packages('argparse', lib=lib,
+                     repos=default_repos, dependencies=TRUE, clean=TRUE)
+  }
+
+  suppressPackageStartupMessages(library(argparse, quietly=TRUE))
+
+  parser <- ArgumentParser(description='Install R packages to a python virtualenv',
+                           formatter_class='argparse.RawTextHelpFormatter')
+  parser$add_argument('packages', help='one or more package names', nargs='*')
+  parser$add_argument('-r', '--requirements', help='a file listing packages')
+  parser$add_argument('--rm', help='remove listed packages',
+                      action='store_true', default=FALSE)
+  parser$add_argument('--bioc', help='packages are in Bioconductor',
+                      action='store_true', default=FALSE)
+  parser$add_argument('--update', help='update existing packages',
+                      action='store_true', default=FALSE)
+  parser$add_argument('--list', help='list packages installed locally',
+                      action='store_true', default=FALSE)
+  parser$add_argument('--repos', default=default_repos,
+                      help='value for "install.packages(repos)" [%(default)s]')
+
+  args <- parser$parse_args(arguments)
+  packages <- if(is.list(args$packages)){character()}else{args$packages}
+
+  if(!is.null(args$requirements)){
+    req <- setdiff(gsub(' ', '', readLines(file('R-requirements.txt'))), '')
+    packages <- unique(c(packages, req))
+  }
+
+  to_install <- setdiff(packages, installed)
+
+  if(args$rm){
+    remove.packages(args$packages, lib=lib)
+  }else if(args$update){
+    update.packages(lib.loc=lib, repos=args$repos)
+  }else if(args$list){
+    cat(gettextf('Packages installed in %s\n', lib))
+    print(
+        as.data.frame(installed.packages(lib.loc=lib))[,c('Version'), drop=FALSE]
+    )
+  }else{
+    if(length(to_install) == 0){
+      stop('no packages specified or all specified packages already installed')
+    }
+
+    if(args$bioc){
+      suppressPackageStartupMessages(library(BiocInstaller, quietly=TRUE))
+      biocLite(to_install, lib.loc=lib, suppressUpdates=TRUE)
+    }else{
+      install.packages(to_install, lib=lib,
+                       repos=args$repos, dependencies=TRUE, clean=TRUE)
+    }
+  }
+}
+
+if(is_main()){
+  main(commandArgs(trailingOnly=TRUE))
+  ## warnings()
+}else{
+  .libPaths(renv())
+}
