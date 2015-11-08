@@ -28,6 +28,7 @@ Add the following lines to an R script to use locally-installed
 packages::
 
   #!/usr/bin/env Rscript
+  if(Sys.getenv("VIRTUAL_ENV") == ""){stop("An active virtualenv is required")}
   source(file.path(Sys.getenv('VIRTUAL_ENV'), 'bin', 'rvenv'))
 
 Loading ``rvenv`` as above prepends ``$VIRTUAL_ENV/lib/R.%v-library``
