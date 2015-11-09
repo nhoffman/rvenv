@@ -11,7 +11,6 @@ I need someplace to put project-specific R packages. The python
 virtualenv I inevitably have installed in any given
 project/analysis/pipeline seems as good a place as any.
 
-
 Installation
 ============
 

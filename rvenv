@@ -57,6 +57,8 @@ main <- function(arguments){
                       action='store_true', default=FALSE)
   parser$add_argument('--list', help='list packages installed locally',
                       action='store_true', default=FALSE)
+  parser$add_argument('-e', '--environ', help='print shell command to set R_LIBS',
+                      action='store_true', default=FALSE)
   parser$add_argument('--repos', default=default_repos,
                       help='value for "install.packages(repos)" [%(default)s]')
 
@@ -70,16 +72,17 @@ main <- function(arguments){
 
   to_install <- setdiff(packages, installed)
 
-  if(args$rm){
+  if(args$environ){
+    cat(gettextf('export R_LIBS=%s\n', lib))
+  }else if(args$rm){
     remove.packages(args$packages, lib=lib)
   }else if(args$update){
     update.packages(lib.loc=lib, repos=args$repos)
   }else if(args$list){
     cat(gettextf('Packages installed in %s\n', lib))
-    print(
-        as.data.frame(installed.packages(lib.loc=lib))[,c('Version'), drop=FALSE]
-    )
+    print(as.data.frame(installed.packages(lib.loc=lib))[,c('Version'), drop=FALSE])
   }else{
+
     if(length(to_install) == 0){
       stop('no packages specified or all specified packages already installed')
     }
