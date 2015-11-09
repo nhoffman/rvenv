@@ -24,7 +24,7 @@ Install to an active virtualenv using pip (or simply copy ``rvenv`` to
 You can use the ``rvenv`` script from the command line to install
 packages to ``$VIRTUAL_ENV/lib/R.%v-library``::
 
-  % rvenv install dplyr
+  % rvenv dplyr
 
 Including the following lines in an R script will set the library path
 to use locally-installed packages::
