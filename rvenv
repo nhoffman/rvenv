@@ -35,6 +35,8 @@ renv <- function(venv=Sys.getenv('VIRTUAL_ENV')){
 
 main <- function(arguments){
   lib <- renv()
+  .libPaths(lib)
+
   installed <- installed.packages(lib.loc=lib)[,'Package']
   if(!'argparse' %in% installed){
     install.packages(
