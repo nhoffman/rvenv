@@ -40,7 +40,7 @@ main <- function(arguments){
   installed <- installed.packages(lib.loc=lib)[,'Package']
   if(!'argparse' %in% installed){
     install.packages(
-        'argparse', lib=lib, repos=default_repos, dependencies=TRUE, clean=TRUE)
+        'argparse', lib=lib, repos=default_repos, dependencies=TRUE, clean=TRUE, quiet=TRUE)
   }
 
   suppressPackageStartupMessages(library(argparse, quietly=TRUE))
@@ -96,7 +96,7 @@ main <- function(arguments){
       biocLite(to_install, lib.loc=lib, suppressUpdates=TRUE)
     }else{
       install.packages(to_install, lib=lib,
-                       repos=args$repos, dependencies=TRUE, clean=TRUE)
+                       repos=args$repos, dependencies=TRUE, clean=TRUE, quiet=TRUE)
     }
   }
 }
