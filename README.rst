@@ -36,10 +36,15 @@ to use locally-installed packages::
 Loading ``rvenv`` as above prepends ``$VIRTUAL_ENV/lib/R.%v-library``
 to the library search path. See example script ``script.R``
 
-To add the library path to an interactive R session::
+To start an interactive R session with the library path defined::
 
   % eval $(rvenv -e)
   % R
+
+And to define the library path within an already running R session::
+
+  > Sys.setenv(VIRTUAL_ENV='some/path/to/virtualenv')
+  > source(file.path(Sys.getenv("VIRTUAL_ENV"), "bin", "rvenv"))
 
 
 usage
@@ -47,8 +52,7 @@ usage
 
 ::
 
-  usage: ./rvenv [-h] [-r REQUIREMENTS] [--rm] [--update] [--list] [-e]
-		 [--repos REPOS]
+  usage: ./rvenv [-h] [-r REQUIREMENTS] [--rm] [-U] [-l] [-e] [-R REPOS] [-v]
 		 [packages [packages ...]]
 
   Install R packages to a python virtualenv
@@ -70,7 +74,9 @@ usage
     -r REQUIREMENTS, --requirements REQUIREMENTS
 			  a file listing packages
     --rm                  remove listed packages
-    --update              update existing packages
-    --list                list packages installed locally
+    -U, --update          update existing packages
+    -l, --list            list packages installed locally
     -e, --environ         print shell command to set R_LIBS
-    --repos REPOS         value for "install.packages(repos)" [http://cran.fhcrc.org/]
+    -R REPOS, --repos REPOS
+			  value for "install.packages(repos)" [http://cran.fhcrc.org/]
+    -v, --verbose         be verbose when installing packages

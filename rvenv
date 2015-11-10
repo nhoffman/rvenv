@@ -36,11 +36,11 @@ renv <- function(venv=Sys.getenv('VIRTUAL_ENV')){
 main <- function(arguments){
   lib <- renv()
   .libPaths(lib)
-
   installed <- installed.packages(lib.loc=lib)[,'Package']
+
   if(!'argparse' %in% installed){
-    install.packages(
-        'argparse', lib=lib, repos=default_repos, dependencies=TRUE, clean=TRUE, quiet=TRUE)
+    install.packages('argparse', lib=lib, repos=default_repos,
+                     dependencies=TRUE, clean=TRUE, quiet=TRUE)
   }
 
   suppressPackageStartupMessages(library(argparse, quietly=TRUE))
@@ -54,17 +54,19 @@ main <- function(arguments){
                       action='store_true', default=FALSE)
   ## parser$add_argument('--bioc', help='packages are in Bioconductor',
   ##                     action='store_true', default=FALSE)
-  parser$add_argument('--update', help='update existing packages',
+  parser$add_argument('-U', '--update', help='update existing packages',
                       action='store_true', default=FALSE)
-  parser$add_argument('--list', help='list packages installed locally',
+  parser$add_argument('-l', '--list', help='list packages installed locally',
                       action='store_true', default=FALSE)
   parser$add_argument('-e', '--environ', help='print shell command to set R_LIBS',
                       action='store_true', default=FALSE)
-  parser$add_argument('--repos', default=default_repos,
+  parser$add_argument('-R', '--repos', default=default_repos,
                       help='value for "install.packages(repos)" [%(default)s]')
+  parser$add_argument('-v', '--verbose', help='be verbose when installing packages',
+                      action='store_true', default=FALSE)
 
   args <- parser$parse_args(arguments)
-  packages <- if(is.list(args$packages)){character()}else{args$packages}
+  packages <- if(is.list(args$packages)){ character() }else{ args$packages }
 
   if(!is.null(args$requirements)){
     req <- setdiff(gsub(' ', '', readLines(file('R-requirements.txt'))), '')
@@ -88,22 +90,18 @@ main <- function(arguments){
       stop('no packages specified or all specified packages already installed')
     }
 
-    ## bioconductor not implemented yet
+    install.packages(to_install, lib=lib, repos=args$repos,
+                     dependencies=TRUE, clean=TRUE, quiet=!args$verbose)
+
+    ## TODO: implement installation from bioconductor
     ## see https://www.bioconductor.org/packages/release/bioc/html/BiocInstaller.html
-    if(FALSE){
-    ## if(args$bioc){
-      suppressPackageStartupMessages(library(BiocInstaller, quietly=TRUE))
-      biocLite(to_install, lib.loc=lib, suppressUpdates=TRUE)
-    }else{
-      install.packages(to_install, lib=lib,
-                       repos=args$repos, dependencies=TRUE, clean=TRUE, quiet=TRUE)
-    }
+    ## suppressPackageStartupMessages(library(BiocInstaller, quietly=TRUE))
+    ## biocLite(to_install, lib.loc=lib, suppressUpdates=TRUE)
   }
 }
 
 if(is_main()){
   main(commandArgs(trailingOnly=TRUE))
-  ## warnings()
 }else{
   .libPaths(renv())
 }
