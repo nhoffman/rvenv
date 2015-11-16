@@ -19,6 +19,10 @@ Install to an active virtualenv using pip (or simply copy ``rvenv`` to
 
   % virtualenv r-env
   % source r-env/bin/activate
+  % pip install rvenv
+
+Or to install from the GitHub repository::
+
   % pip install git+https://github.com/nhoffman/rvenv.git
 
 You can use the ``rvenv`` script from the command line to install
