@@ -1,0 +1,17 @@
+==================
+ developing rvenv
+==================
+
+Version number is taken from the most recent git tag. Use format
+``major.minor`` where both ``major`` and ``minor`` are integers, eg::
+
+  git tag -a -m 'version 0.1' 0.1
+
+Be sure to push tags after creating a new one::
+
+  git push --tags
+
+Upload new version to pypi::
+
+  rm -rf dist && python setup.py sdist bdist_wheel
+  twine upload dist/*

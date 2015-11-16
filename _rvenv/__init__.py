@@ -1,1 +1,7 @@
-raise NotImplementedError("This isn't a real python package!")
+from os import path
+
+try:
+    with open(path.join(path.dirname(__file__), 'data', 'ver')) as f:
+        __version__ = f.read().strip().replace('-', '+', 1).replace('-', '.')
+except Exception, e:
+    __version__ = ''
